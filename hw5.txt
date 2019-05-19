@@ -1,0 +1,253 @@
+------------------------------------------------------------------------
+CS 320 Principles of Programming Languages, Spring 2019       Homework 5
+------------------------------------------------------------------------
+
+Due: 1:00pm on Friday, May 24 (via the HW5 dropbox on D2L)
+
+NOTE: All parts of this homework exercise are based on ideas that were
+introduced in the Week 6 lab.  I did also consider asking you to submit
+a solution to Step 11 of the Week 7 lab as a third question.  However,
+although I strongly recommend that you complete that exercise, I have
+decided not to include it as a formally graded part of this assignment.
+
+------------------------------------------------------------------------
+Preamble:
+---------
+There was no formally graded homework assignment in Week 6; instead, you
+were asked to complete the exercises from the lab materials that week
+having to do with "OOP and dynamic dispatch in Python".  In case you did
+not quite manage to finish those exercises, you might want to note the
+following:
+
+- The solutions for the first 8 steps have already been posted on D2L.
+  Make sure that you understand those examples before you attempt the
+  exercises in this homework.  (I genuinely believe that it could take a
+  lot longer to complete this homework if you try to do so without
+  having understood the examples in those steps.)
+
+- A solution to Step 9 is provided below.
+
+- All of the code that you need for Step 10 was already included in the
+  Lab 6 instructions.  You will need to understand how that code works
+  in order to complete one of the main questions below.
+
+- Your solution for Step 11 will be your answer to the first question
+  below.
+
+The "dynamic dispatch pattern":
+-------------------------------
+As a reminder, we can use dynamic dispatch to make choices that depend
+on the type of an object.  For example, instead of writing code that
+looks something like the following pseudo code:
+
+  if obj is an empty list:
+    ... code to handle empty list case ...
+  else:
+    ... code to handle nonempty list case ...
+
+you would instead write:
+
+  obj.m(...)
+
+where "m" is a new method name, "..." is a suitable list of arguments,
+and where the method is defined by adding two definitions to the
+program:
+
+  def m(...):     # in the Nil class
+    ... code to handle empty list case ...
+
+  def m(...):     # in the Cons class
+    ... code to handle nonempty list case ...
+
+Using the dynamic dispatch pattern to solve Step 9:
+---------------------------------------------------
+For example, Step 9 of the assignment asks for an implementation of a
+method that will produce a string that describes the elements of a list,
+neatly separated by commas.  It is easy to do this for a Nil list: just
+return an empty string:
+
+    def commaElements(self):   # in the Nil class
+      return ''
+
+But what code should we use in the Cons class?  The problem here is that
+we need to decide whether the output will include a comma, and to make
+that decision, we need to know whether the tail of the list is empty or
+not.  In pseudo code, this might look something like the following:
+
+    def commaElements(self):   # in the Cons class
+      if self.tail is an empty list:
+        return str(self.head)
+      else:
+        return str(self.head) + ', ' + self.tail.commaElements()
+
+The "self.tail is an empty list" part of this code is not valid code,
+but we can eliminate it by using the dynamic dispatch pattern shown
+above.  The first step is to rewrite the definition of commaElements in
+the Cons class (we'll figure out what to use in place of "..." shortly,
+but for now it's just a placeholder):
+
+    def commaElements(self):   # in the Cons class
+      return self.tail.commaCons(...)
+
+Next we add implementations of the new commaCons method in each of the
+Nil and Cons classes:
+
+    def commaCons(self, ...):   # in the Nil class
+      return str(head)
+
+    def commaCons(self, ...):   # in the Cons class
+      return str(head) + ', ' + self.commaElements()
+
+Now we can see that both of these methods require "str(head)" as an
+input, so we can pass that value as a parameter in the calls to
+commaCons:
+
+    def commaElements(self):   # in the Cons class
+      return self.tail.commaCons(str(self.head))
+
+    def commaCons(self, s):     # in the Nil class
+      return s
+
+    def commaCons(self, s):     # in the Cons class
+      return s + ', ' + self.commaElements()
+
+Together, those three method definitions complete the implementation of
+commaElements().
+
+Once you understand all of the above, you are ready to continue on
+to the following questions.  (Conversely, if you do not understand
+any part of the above, then you are strongly encouraged to ask us
+questions instead; if so, try to identify where you're getting
+stuck ... we don't expect you to be able to pinpoint problem areas
+exactly, but if you can explain which parts make sense and which
+don't, then it will be much easier for us to clear up
+misunderstandings!)
+
+------------------------------------------------------------------------
+Question 1:
+-----------
+Write an explanation for your solution to the "Zipping along!" exercise
+in Step 11 of Lab 6.  (Please see the lab materials for more details and
+hints about the specifics of that problem.)  Your explanation:
+
+a) Should be written in a similar style to the description for the
+   commaElements() method given above.
+
+b) Should not include any parts of the code from list.py that are not
+   directly relevant to solving this specific exercise (in other words,
+   we only want to see code that is needed for the implementation of
+   zip).
+
+c) Should include brief examples of "thoughtful testing" that provide
+   good evidence that your implementation works correctly.  In
+   particular, this means that you are not expected to include details
+   of a large number of test cases, but that you should instead include
+   a small number of carefully selected tests, explaining in each case
+   why you picked that specific test, and how the output helps to
+   confirm that your implementation is working correctly.
+
+Note that your implementation should use dynamic dispatch only, and
+should not use any direct "if" statements or expressions.
+
+Question 2:
+-----------
+These questions are distributed in a text file that also includes two
+Python source files:
+
+- pic.py is an implementation in Python for a subset of the Pic.lhs
+  library that we used in the early weeks of the class for drawing tree
+  diagrams.  As with Pic.lhs, you are welcome to look at the code in
+  this file if you wish, but you should not need to do so (and you
+  should not make any modifications to that code) as you work on this
+  assignment.
+
+- prop.py is a Python implementation of the Prop data type that you
+  originally saw (in Haskell notation) on Week 1, Slide 31, and which
+  you have used in multiple ways since then.  This code includes:
+
+  - The definition of a base class called Prop and six subclasses called
+    TRUE, FALSE, VAR, AND, OR, and NOT.
+
+  - Implementations of __init__ constructors for each of the classes
+    where required, and __str__ methods for generating simple string
+    descriptions of Prop values.
+
+  - Implementations of an apic() method, which can be used to generate a
+    diagram showing the tree structure of a given prop value.  You are
+    not expected to understand how this code works, but you may find
+    that it is useful for the purposes of debugging and for visualizing
+    Prop AST structures.  For instance, if example is a Prop value (see
+    the code in prop.py for more details), then the following functions
+    will print out a description of example in both text and tree
+    formats:
+
+      print(example)
+      print(example.apic())
+
+From this starting point, modify the code to include implementations (in
+Python) for the following functions, all using dynamic dispatch (no "if"
+statements or expressions):
+
+a) The vars function (from Week 1, Slide 39), which returns the list of
+   variables in an arbitrary Prop value.  You should use a standard
+   Python list for the result.  For example, the implementation in the
+   VAR class will look something like the following:
+
+     def vars(self):
+       return [self.name]
+
+b) The eval function (from Week 1, Slides 53-58), which returns the
+   value of a Prop expression in a given environment,  You should use a
+   standard Python dictionary as an environment.  For example, when your
+   implementation is complete, you should be able to evaluate and
+   display the value of a Prop expression using statements that look
+   something like the following:
+
+     print(example.eval({'A': True, 'B': False}))
+
+c) An equality function that tests to see if two Prop abstract syntax
+   trees have the same structure.  The default implementation of
+   equality in Python, for example, will print False if you run the
+   following command:
+
+     print(VAR("A") == VAR("A"))
+
+   This default behavior reflects the fact that Python constructs a
+   distinct object for each of the two VAR("A") calls shown here, and so
+   it considers them to be distinct objects, even though they have the
+   same structure (in this case, they are both VAR objects with name
+   "A").  After you have completed this assignment, the same command
+   will print True, recognizing that the two arguments are structurally
+   equivalent.  More precisely, for any two Prop values p and q, the
+   expression p==q should be True if, and only if the two trees for p
+   and q print out in exactly the same way.
+
+   Your answer to this question should use the dynamic dispatch
+   techniques that were highlighted in the solution to Step 10 in Lab 6.
+   Your implementation can only use string comparisons for the specific
+   purpose of testing whether two VAR objects have the same name.  For
+   example, you will not receive credit for an answer that uses an
+   expression like str(p)==str(q) to determine if p and q are equal.
+   (This could be important in practice because, if p and q are large,
+   then the resulting strings could also be quite large.  But if the top
+   level constructors are different --- for example, if p=AND(...) and
+   q=(...) --- then your implementation of equality should be able to
+   detect immediately that the two expressions are different without
+   the overhead of building the full strings.)
+
+   [Hint: Make sure you understand Step 10 in Lab 6, and follow the
+   pattern shown there carefully.  If you do that, you can complete an
+   answer to this question by adding 36 short lines of code to prop.py,
+   half of which are mostly very similar method definition headers.
+   If you don't follow those instructions, or if you don't understand
+   the pattern used there, then you are likely to need a lot more lines
+   of code.  As always, ask for help if you do not understand the text
+   in Step 10 of Lab 6!]
+
+For each part here, you should show the new code that you have added and
+some evidence of testing.  Do not include code that is not directly
+relevant to the specific method that you are implementing, but you do
+not need to include a walk-through of the new code as was requested for
+Question 1.
+
+------------------------------------------------------------------------
