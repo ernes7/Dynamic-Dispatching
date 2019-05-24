@@ -1,7 +1,10 @@
 import pic
 
 class Prop:
-  pass
+  def equality(self):
+    return False
+  def not_equality(other, self):
+    return False
 
 class TRUE(Prop):
   def __str__(self):
@@ -12,6 +15,9 @@ class TRUE(Prop):
   def vars(self):
     return []
   def eval(self):
+    return True
+
+  def equality(self):
     return True
 # *******************************
 
@@ -40,6 +46,10 @@ class VAR(Prop):
   def eval(self,other):
     return other[self.name]
 
+  def not_equality(self,other):
+    return self.name == other.name
+  def __eq__(self,other):
+    return other.not_equality(self)
 # *******************************
 
 class AND(Prop):
@@ -54,6 +64,11 @@ class AND(Prop):
   def vars(self):
     return self.p.vars() + self.q.vars()
 # *******************************
+  def eval(self,other):
+    return self.evalHelper(other)
+  def evalHelper(self,other):
+    return self.p.eval(other) and self.q.eval(other)
+# *********************************
 
 class OR(Prop):
   def __init__(self, p, q):
@@ -67,6 +82,11 @@ class OR(Prop):
   def vars(self):
     return self.p.vars() + self.q.vars()
 # *******************************
+  def eval(self,other):
+    return self.evalHelper(other)
+  def evalHelper(self,other):
+    return self.p.eval(other) or self.q.eval(other)
+# *************************************
 
 class NOT(Prop):
   def __init__(self, p):
@@ -77,15 +97,20 @@ class NOT(Prop):
     return self.p.apic().unaryNode('NOT')
   # *******************************
   def vars(self):
-    return self.p.vars() 
-
+    return self.p.vars()
+#***********************************
+  def eval(self,other):
+    return self.evalHelper(other)
+  def evalHelper(self,other):
+    return not self.p.eval(other) 
+#*********************************
 
 # *******************************
 #self.p.eval(other) and self.q.evals(other)
 
 # The following should print True ... but you'll need to
 # make some changes to the code before it works properly.
-#print(VAR("A") == VAR("A"))
+print(VAR("A") == VAR("A"))
 
 # The next section of code constructs some Prop abstract
 # syntax trees ...
@@ -99,7 +124,9 @@ right   = AND(NOT(a), b)
 example = OR(left, right)
 
 # Print out the example expression in text and tree forms:
-#print(t.vars())
+#print(example.eval({'A': True, 'B': False}))
+#print(left.eval({'A': True, 'B': False}))
+#print(right.eval({'A': False, 'B': True}))
 #print(n.vars())
 #print(a.vars())
 #print(b.vars())
@@ -109,8 +136,7 @@ example = OR(left, right)
 #print(example.vars())
 #print(example)
 #print(example.apic())
-print(a.eval({'A': True}))
-print(b.eval({'B': False}))
+
 
 # ... and then puts some of them together in a list:
 list = [TRUE(), TRUE(), left, right, OR(left, right), example]

@@ -70,6 +70,14 @@ print(nums(a,a).zip(nums(0,3))) --> characters instead of integers
 NameError: name 'a' is not defined
 
 **************************************************************
+For question 2: This document contains the implemented code 
+corresponding to a,b,and c. 
+Also, testing scenarions for each. 
+I did not include Explanation since it was not required.
+I am citing the HW5, last parapragh ->
+"but you do NOT need to include a walk-through of the 
+new code as was requested for
+Question 1."
 ***************** Problem 2a *****************************
 class TRUE(Prop):
   def vars(self):
@@ -95,16 +103,7 @@ class NOT(Prop):
   def vars(self):
     return self.p.vars()
 
-The true and false vars functions behave the same. 
-The Not vars function was my starting point after finishing the TRUE/FALSE and VAR implementations.
-AND/OR vars methods behave equally in this exercices. It is formed by a list appending of 
-both parameters using the same idea of NOT. 
-IT simply prints the var of anything associated with it. 
-All the above implementations of the vars method behave exaclty the same as in 
-slide 39 of week 1. 
-This var implementation over the Prop class, let us compute over abstract syntax trees and
-manipulate them. 
-
+----------------------------
 TESTING:
 a       = VAR("A")
 b       = VAR("B")
@@ -124,6 +123,7 @@ print(right.vars())
 print(left.vars())
 print(example.vars())
 
+*** Output ***
 []
 ['A']
 ['A']
@@ -132,6 +132,7 @@ print(example.vars())
 ['A', 'B']
 ['A', 'B']
 ['A', 'B', 'A', 'B']
+--------------------------------
 
 ****************************************************************
 ************************* Problem 2b ***************************
@@ -139,13 +140,69 @@ Class VAR(Prop):
   def eval(self,other):
     return other[self.name]
 
+Class OR(Prop):
+  def eval(self,other):
+    return self.evalHelper(other)
+  def evalHelper(self,other):
+    return self.p.eval(other) or self.q.eval(other)
+
+Class AND(Prop):
+  def eval(self,other):
+    return self.evalHelper(other)
+  def evalHelper(self,other):
+    return self.p.eval(other) and self.q.eval(other)
+
+Class NOT(Prop):
+  def eval(self,other):
+    return self.evalHelper(other)
+  def evalHelper(self,other):
+    return not self.p.eval(other)
+
+-------------------------------
 TESTING:
 
 a       = VAR("A")
 b       = VAR("B")
+left    = AND(a, NOT(b))
+right   = AND(NOT(a), b)
+example = OR(left, right)
 
 print(a.eval({'A': True}))
 print(b.eval({'B': False}))
+print(example.eval({'A': True, 'B': False}))
+print(left.eval({'A': True, 'B': False}))
+print(right.eval({'A': False, 'B': True}))
 
+*** Output ***
 True
 False
+True
+True
+True
+-----------------------
+************************************************************************
+*************************** Problem 2c *********************************
+class Prop:
+  def equality(self):
+    return False
+  def not_equality(other, self):
+    return False
+
+Class TRUE(Prop):  
+  def equality(self):
+    return True
+
+Class VAR(Prop):
+  def not_equality(self,other):
+    return self.name == other.name
+  def __eq__(self,other):
+    return other.not_equality(self)
+
+----------------
+TESTING:
+
+print(VAR("A") == VAR("A"))
+
+*** Output ***
+True
+----------------------
