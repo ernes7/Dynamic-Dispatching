@@ -79,16 +79,13 @@ class FALSE(Prop):
   def vars(self):
     return []
 
-
 class VAR(Prop):
   def vars(self):
     return [self.name]
 
-
 class AND(Prop):
   def vars(self):
     return self.p.vars() + self.q.vars()
-
 
 class OR(Prop):
   def vars(self):
@@ -97,6 +94,16 @@ class OR(Prop):
 class NOT(Prop):
   def vars(self):
     return self.p.vars()
+
+The true and false vars functions behave the same. 
+The Not vars function was my starting point after finishing the TRUE/FALSE and VAR implementations.
+AND/OR vars methods behave equally in this exercices. It is formed by a list appending of 
+both parameters using the same idea of NOT. 
+IT simply prints the var of anything associated with it. 
+All the above implementations of the vars method behave exaclty the same as in 
+slide 39 of week 1. 
+This var implementation over the Prop class, let us compute over abstract syntax trees and
+manipulate them. 
 
 
 ****************************************************************
