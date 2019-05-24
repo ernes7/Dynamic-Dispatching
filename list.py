@@ -105,8 +105,14 @@ def powers2(n):
 """ Testing """
 # HW 5.1 #
 print(nums(0,6).zip(nums(1,7)))
+
+
 print(nums(0,6).zip(nums(0,3)))
+
+
 print(nums(0,3).zip(nums(0,6)))
+
+
 
 # 9 #
 #print(alist.commaElements())

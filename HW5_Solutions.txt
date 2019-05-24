@@ -8,8 +8,7 @@ HW 5
 Class Nil:
 # -----------------------------------------------------
 ############ HW 5 Problem 1 #############
-    #def zip(self,other):
-     #   return self.zipHelp(other)
+
     def zip(self,other):
         return self.zipHelp(other)
     def zip2(self,other):
@@ -23,14 +22,83 @@ class Cons:
 ############ HW 5 Problem 1 #############
     def zip(self,other):
         return '[' + other.zipHelp(self)
+
     def zip2(self,other):
         return ' , ' + other.zipHelp(self)
-    #def zipHelp(other, self):
-        #return Cons((self.head, other.head),self.tail.zip(other.tail))
+
     def zipHelp(other, self):
         return '(' + str(self.head) + ', ' + str(other.head) + ')' + str(self.tail.zip2(other.tail))
 #---------------------------------------------------  
 
-Explanation :
+Explanation : The zip function do not include any parts of the code from list.py that are not
+   directly relevant to solving this exercise. The program starts by calling:
+        list1.zip.list2()
+    where list 1 and list 2 are a list of integers. 
+    The first step is to rewrite the definition of zip in
+    the Cons class. Followed by the implemenation of zip in the Nil class. 
+    zip starts with an open bracket appended to a call to method zipHelp. The dynamic
+    dispatching occur when the program at run time, decided with implemenation of zip
+    and zipHelp to use. If the list is empty, it will use the definition in the 
+    Nil class. Otherwise will proceed to use the methods in the Cons class.
+    When zipHelp is called, it takes the head of both lists and zip. 
+    As in commaElements, the method requires the use of str(head) to parse it
+    as an string. After the first tuple is completed, zipHelp calls zip2.
+    The difference between zip and zip2 is that zip acts as an opener/first element,
+    and zip2 will continue to zip the rest of the list. 
+    zip2 adds the comma to separate the tuples and calls zipHelp again, it checks
+    for Nil or Cons at this time. Once the dispatching get to the Nil class, 
+    ( meaning the end of one of the lists) zipHelp will close the bracket. 
+    It is important to clarify that the additional method of zip2 is just 
+    to fix the formatting, and is not intended as extra help with zipping. 
+
 
 Testing : 
+
+print(nums(0,6).zip(nums(1,7)))
+[(0, 1) , (1, 2) , (2, 3) , (3, 4) , (4, 5) , (5, 6)]
+
+print(nums(0,6).zip(nums(0,3)))
+[(0, 0) , (1, 1) , (2, 2) , ]
+
+print(nums(0,3).zip(nums(0,6)))
+[(0, 0) , (1, 1) , (2, 2)]
+
+print(nums(0,0).zip(nums(0,3))) --> one list is empty
+]
+
+print(nums(a,a).zip(nums(0,3))) --> characters instead of integers
+NameError: name 'a' is not defined
+
+**************************************************************
+***************** Problem 2a *****************************
+class TRUE(Prop):
+  def vars(self):
+    return []
+
+class FALSE(Prop):
+  def vars(self):
+    return []
+
+
+class VAR(Prop):
+  def vars(self):
+    return [self.name]
+
+
+class AND(Prop):
+  def vars(self):
+    return self.p.vars() + self.q.vars()
+
+
+class OR(Prop):
+  def vars(self):
+    return self.p.vars() + self.q.vars()
+
+class NOT(Prop):
+  def vars(self):
+    return self.p.vars()
+
+
+****************************************************************
+************************* Problem 2b ***************************
+

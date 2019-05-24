@@ -8,12 +8,24 @@ class TRUE(Prop):
     return 'TRUE'
   def apic(self):
     return pic.apic('TRUE')
+# *******************************
+  def vars(self):
+    return []
+  def eval(self):
+    return True
+# *******************************
 
 class FALSE(Prop):
   def __str__(self):
     return 'FALSE'
   def apic(self):
     return pic.apic('FALSE')
+# *******************************
+  def vars(self):
+    return []
+  def eval(self):
+    return False
+# *******************************
 
 class VAR(Prop):
   def __init__(self, name):
@@ -22,6 +34,12 @@ class VAR(Prop):
     return self.name
   def apic(self):
     return pic.apic(self.name)
+# *******************************
+  def vars(self):
+    return [self.name]
+  def eval(self):
+    return [self.name]
+# *******************************
 
 class AND(Prop):
   def __init__(self, p, q):
@@ -31,6 +49,10 @@ class AND(Prop):
     return 'AND ' + str(self.p) + ' ' + str(self.q)
   def apic(self):
     return self.p.apic().binaryNode('AND', self.q.apic())
+# *******************************
+  def vars(self):
+    return self.p.vars() + self.q.vars()
+# *******************************
 
 class OR(Prop):
   def __init__(self, p, q):
@@ -40,6 +62,10 @@ class OR(Prop):
     return 'OR ' + str(self.p) + ' ' + str(self.q)
   def apic(self):
     return self.p.apic().binaryNode('OR', self.q.apic())
+  # *******************************
+  def vars(self):
+    return self.p.vars() + self.q.vars()
+# *******************************
 
 class NOT(Prop):
   def __init__(self, p):
@@ -48,22 +74,33 @@ class NOT(Prop):
     return 'NOT ' + str(self.p)
   def apic(self):
     return self.p.apic().unaryNode('NOT')
+  # *******************************
+  def vars(self):
+    return self.p.vars()
+  def eval(self, p):
+    return "False"==self.p.vars() 
+# *******************************
 
 # The following should print True ... but you'll need to
 # make some changes to the code before it works properly.
-print(VAR("A") == VAR("A"))
+#print(VAR("A") == VAR("A"))
 
 # The next section of code constructs some Prop abstract
 # syntax trees ...
 a       = VAR("A")
 b       = VAR("B")
+c       = AND(a,b)
+t = TRUE()
+n = NOT(a)
 left    = AND(a, NOT(b))
 right   = AND(NOT(a), b)
 example = OR(left, right)
 
 # Print out the example expression in text and tree forms:
-print(example)
-print(example.apic())
+#print(example.vars())
+#print(example)
+#print(example.apic())
+print(n.eval({'A': False}))
 
 # ... and then puts some of them together in a list:
 list = [TRUE(), TRUE(), left, right, OR(left, right), example]
@@ -88,5 +125,5 @@ def eqTests(list):
     print(l)
 
 # Run some tests:
-eqTests(list)
+#eqTests(list)
 
