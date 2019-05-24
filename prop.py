@@ -37,8 +37,9 @@ class VAR(Prop):
 # *******************************
   def vars(self):
     return [self.name]
-  def eval(self):
-    return [self.name]
+  def eval(self,other):
+    return other[self.name]
+
 # *******************************
 
 class AND(Prop):
@@ -76,10 +77,11 @@ class NOT(Prop):
     return self.p.apic().unaryNode('NOT')
   # *******************************
   def vars(self):
-    return self.p.vars()
-  def eval(self, p):
-    return "False"==self.p.vars() 
+    return self.p.vars() 
+
+
 # *******************************
+#self.p.eval(other) and self.q.evals(other)
 
 # The following should print True ... but you'll need to
 # make some changes to the code before it works properly.
@@ -90,17 +92,25 @@ class NOT(Prop):
 a       = VAR("A")
 b       = VAR("B")
 c       = AND(a,b)
-t = TRUE()
-n = NOT(a)
+t       = TRUE()
+n       = NOT(a)
 left    = AND(a, NOT(b))
 right   = AND(NOT(a), b)
 example = OR(left, right)
 
 # Print out the example expression in text and tree forms:
+#print(t.vars())
+#print(n.vars())
+#print(a.vars())
+#print(b.vars())
+#print(c.vars())
+#print(right.vars())
+#print(left.vars())
 #print(example.vars())
 #print(example)
 #print(example.apic())
-print(n.eval({'A': False}))
+print(a.eval({'A': True}))
+print(b.eval({'B': False}))
 
 # ... and then puts some of them together in a list:
 list = [TRUE(), TRUE(), left, right, OR(left, right), example]

@@ -105,7 +105,47 @@ slide 39 of week 1.
 This var implementation over the Prop class, let us compute over abstract syntax trees and
 manipulate them. 
 
+TESTING:
+a       = VAR("A")
+b       = VAR("B")
+c       = AND(a,b)
+t       = TRUE()
+n       = NOT(a)
+left    = AND(a, NOT(b))
+right   = AND(NOT(a), b)
+example = OR(left, right)
+
+print(t.vars())                
+print(n.vars())
+print(a.vars())
+print(b.vars())
+print(c.vars())
+print(right.vars())
+print(left.vars())
+print(example.vars())
+
+[]
+['A']
+['A']
+['B']
+['A', 'B']
+['A', 'B']
+['A', 'B']
+['A', 'B', 'A', 'B']
 
 ****************************************************************
 ************************* Problem 2b ***************************
+Class VAR(Prop):
+  def eval(self,other):
+    return other[self.name]
 
+TESTING:
+
+a       = VAR("A")
+b       = VAR("B")
+
+print(a.eval({'A': True}))
+print(b.eval({'B': False}))
+
+True
+False
