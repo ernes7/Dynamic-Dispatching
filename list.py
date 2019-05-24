@@ -19,7 +19,40 @@ class Nil:
     def rev0nto(self, list): #STEP 7#
         return list
 
+    def commaCons(self, s):     #STEP 9#
+        return s
+
+    def eqNil(self):         # STEP 10 #
+        return False
+    def eqNil(self):         # STEP 10 #
+        return True
+    def __eq__(self, other):  # STEP 10 #
+        return other.eqNil() 
+
+# -----------------------------------------------------
+############ HW 5 Problem 1 #############
+    #def zip(self,other):
+     #   return self.zipHelp(other)
+    def zip(self,other):
+        return self.zipHelp(other)
+    def zip2(self,other):
+        return ']'
+    def zipHelp(other, self):
+        return ']'
+#--------------------------------------------------- 
+
 class Cons:
+# -----------------------------------------------------
+############ HW 5 Problem 1 #############
+    def zip(self,other):
+        return '[' + other.zipHelp(self)
+    def zip2(self,other):
+        return ' , ' + other.zipHelp(self)
+    #def zipHelp(other, self):
+        #return Cons((self.head, other.head),self.tail.zip(other.tail))
+    def zipHelp(other, self):
+        return '(' + str(self.head) + ', ' + str(other.head) + ')' + str(self.tail.zip2(other.tail))
+#---------------------------------------------------     
     """ Represents a non-empty list. """
     def __init__(self, head, tail):
         self.head = head
@@ -43,6 +76,18 @@ class Cons:
         return self.tail.sumAcc(acc + self.head)
     def rev0nto(self, list): #STEP 7#
         return self.tail.rev0nto(Cons(self.head, list))
+# ---------------------------------------------------
+    def commaElements(self):   #STEP 9#
+        return self.tail.commaCons(str(self.head))
+    def commaCons(self, s):     #STEP 9#
+        return s + ', ' + self.commaElements()
+# ---------------------------------------------------
+    def eqCons(other, self): #STEP 10#
+        return False
+    def eqCons(other, self): #STEP 10#
+        return self.head==other.head and self.tail==other.tail
+    def __eq__(self, other):  # STEP 10 #
+        return other.eqCons(self)
 
 
 alist = Cons(1, Cons(2, Cons(3, Nil())))
@@ -58,6 +103,14 @@ def powers2(n):
     return loop(1,n)
 
 """ Testing """
+# HW 5.1 #
+print(nums(0,6).zip(nums(1,7)))
+print(nums(0,6).zip(nums(0,3)))
+print(nums(0,3).zip(nums(0,6)))
+
+# 9 #
+#print(alist.commaElements())
+
 # 7 #
 #print(alist.sumAcc(0))
 

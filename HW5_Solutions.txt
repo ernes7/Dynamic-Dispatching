@@ -1,0 +1,36 @@
+-----------------
+Ernesto Martinez
+CS 320
+HW 5
+----------------
+
+***********************Problem 1********************************
+Class Nil:
+# -----------------------------------------------------
+############ HW 5 Problem 1 #############
+    #def zip(self,other):
+     #   return self.zipHelp(other)
+    def zip(self,other):
+        return self.zipHelp(other)
+    def zip2(self,other):
+        return ']'
+    def zipHelp(other, self):
+        return ']'
+#--------------------------------------------------- 
+
+class Cons:
+# -----------------------------------------------------
+############ HW 5 Problem 1 #############
+    def zip(self,other):
+        return '[' + other.zipHelp(self)
+    def zip2(self,other):
+        return ' , ' + other.zipHelp(self)
+    #def zipHelp(other, self):
+        #return Cons((self.head, other.head),self.tail.zip(other.tail))
+    def zipHelp(other, self):
+        return '(' + str(self.head) + ', ' + str(other.head) + ')' + str(self.tail.zip2(other.tail))
+#---------------------------------------------------  
+
+Explanation :
+
+Testing : 
